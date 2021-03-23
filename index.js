@@ -1,11 +1,15 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 
+// MongoDB Init
+const Person = require("./models/phonebook");
+
+// Express Init
 const app = express();
 
-app.use(express.json());
-
 app.use(express.static("build"));
+app.use(express.json());
 
 // Request logger (also logs the content when post)
 app.use(
@@ -23,82 +27,57 @@ app.use(
   })
 );
 
-let persons = [
-  {
-    name: "Arto1 Hellas1",
-    number: "040-87476657",
-    id: 1,
-  },
-  {
-    name: "Arto2 Hellas2",
-    number: "040-652456",
-    id: 2,
-  },
-  {
-    name: "Arto3 Hellas3",
-    number: "040-123456",
-    id: 3757867,
-  },
-  {
-    name: "Arto4 Hellas4",
-    number: "040-12748234",
-    id: 475527,
-  },
-];
-
-const totalContacts = () => {
-  return persons.length;
-};
-
-const generateId = () => {
-  return Math.floor(Math.random() * 1000000000000);
-};
-
-app.get("/info", (request, response) => {
-  console.log("Request for info");
-  response.send(
-    `<p>Phonebook has info for ${totalContacts()} people</p><p>${new Date()}</p>`
-  );
+// Sends a page of info with number of contacts in MongoDB
+app.get("/info", (request, response, next) => {
+  console.log("Request for info - present number of contacts");
+  Person.countDocuments({})
+    .then((count) => {
+      response.send(
+        `<p>Phonebook has info for ${count} people</p><p>${new Date()}</p>`
+      );
+    })
+    .catch((err) => next(err));
 });
 
-app.get("/api/persons", (request, response) => {
+// Gets all contacts from MongoDB
+app.get("/api/persons", (request, response, next) => {
   console.log("Request for all persons");
-  response.json(persons);
+  Person.find({})
+    .then((result) => {
+      response.json(result);
+    })
+    .catch((err) => next(err));
 });
 
-app.get("/api/persons/:id", (request, response) => {
+// Gets person with 'id' from MongoBD
+app.get("/api/persons/:id", (request, response, next) => {
   console.log("Request for particular person");
-  const id = Number(request.params.id);
-  console.log("id:", id);
-  const person = persons.find((p) => p.id === id);
-  console.log("person:", person);
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
-  }
+  console.log("id:", request.params.id);
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((err) => next(err));
 });
 
-const checkDuplicate = (newName) => {
-  return persons.find((person) => person.name === newName);
-};
-
-app.delete("/api/persons/:id", (request, response) => {
+// Deleted a contact from MongoDB
+app.delete("/api/persons/:id", (request, response, next) => {
   console.log("Request to delete");
-  const id = Number(request.params.id);
-  console.log("id:", id);
-  const person = persons.find((p) => p.id === id);
-  console.log("person:", person);
-  if (person) {
-    persons = persons.filter((person) => person.id !== id);
+  console.log("id:", request.params.id);
+
+  Person.findByIdAndDelete(request.params.id)
+    .then((result) => {
     console.log("deleted person");
     response.status(204).end();
-  } else {
-    console.log("person not found");
-    response.status(404).end();
-  }
+    })
+    .catch((err) => next(err));
 });
 
+// Adds new contact to MongoDB
 app.post("/api/persons", (request, response) => {
   console.log("Add new person");
   const body = request.body;
@@ -112,26 +91,48 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  console.log("Checking for duplicates");
-  if (checkDuplicate(body.name)) {
-    console.log("Duplicate found");
-    return response.status(400).json({
-      error: "Name already exists",
-    });
-  }
+  // console.log("Checking for duplicates");
+  // if (checkDuplicate(body.name)) {
+  //   console.log("Duplicate found");
+  //   return response.status(400).json({
+  //     error: "Name already exists",
+  //   });
+  // }
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
-  };
+  });
 
-  persons = persons.concat(person);
-  console.log("New person added");
-  response.json(person);
+  person.save().then((newPerson) => {
+    console.log("New person added");
+    response.json(person);
+  });
 });
 
-const PORT = process.env.PORT || 3001;
+// Defining unknown end point handler (bad path)
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+// For all unknown URLs (bad path)
+app.use(unknownEndpoint);
+
+// Defining a error handler
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+// this has to be the last loaded middleware -error handling
+app.use(errorHandler);
+
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -3,23 +3,20 @@
 GET http://localhost:3001/api/persons
 
 ### Get Valid person
-GET http://localhost:3001/api/persons/1
+GET http://localhost:3001/api/persons/6059c3721d21303a1b5bb7b6
 
 ### get Invalid person
 GET http://localhost:3001/api/persons/1000
 
-### Delete valid person
-DELETE http://localhost:3001/api/persons/1
-
-### Delete invalid person
-DELETE http://localhost:3001/api/persons/1000
+### Delete valid/already deleted person
+DELETE http://localhost:3001/api/persons/6059c3721d21303a1b5bb7b6
 
 ### New person // Already exits(send twice)
 POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-    "name": "sample4",
+    "name": "sample person",
     "number": "123 456 7896"
 }
 
@@ -29,39 +26,4 @@ content-type: application/json
 
 {
     "name": "sample4"
-}
-
-
-
-### Heroku testing
-### Get all
-GET https://tranquil-dawn-70493.herokuapp.com/api/persons
-
-### Get Valid person
-GET https://tranquil-dawn-70493.herokuapp.com/api/persons/1
-
-### get Invalid person
-GET https://tranquil-dawn-70493.herokuapp.com/api/persons/1000
-
-### Delete valid person
-DELETE https://tranquil-dawn-70493.herokuapp.com/api/persons/1
-
-### Delete invalid person
-DELETE https://tranquil-dawn-70493.herokuapp.com/persons/1000
-
-### New person // Already exits(send twice)
-POST https://tranquil-dawn-70493.herokuapp.com/api/persons
-content-type: application/json
-
-{
-    "name": "sample4",
-    "number": "123 456 7896"
-}
-
-### content missing
-POST https://tranquil-dawn-70493.herokuapp.com/api/persons
-content-type: application/json
-
-{
-    "number": "1325645"
 }
