@@ -45,7 +45,7 @@ if (newName && newNumber) {
   // Retrieve all contacts frm DB
   Person.find({}).then((result) => {
     result.forEach((contact) => {
-      console.log(`${bold}${contact.name} ${contact.number}`);
+      console.log(`${contact.name} ${contact.number}`);
     });
     mongoose.connection.close();
   });
