@@ -71,8 +71,8 @@ app.delete("/api/persons/:id", (request, response, next) => {
 
   Person.findByIdAndDelete(request.params.id)
     .then((result) => {
-    console.log("deleted person");
-    response.status(204).end();
+      console.log("deleted person");
+      response.status(204).end();
     })
     .catch((err) => next(err));
 });
@@ -108,6 +108,21 @@ app.post("/api/persons", (request, response) => {
     console.log("New person added");
     response.json(person);
   });
+});
+
+//Update contact on MongoDB
+app.put("/api/persons/:id", (request, response, next) => {
+  console.log("request to update:", request.params.id);
+  const person = {
+    name: request.body.name,
+    number: request.body.number,
+  };
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedContact) => {
+      console.log("Contact updated");
+      response.json(updatedContact);
+    })
+    .catch((err) => next(err));
 });
 
 // Defining unknown end point handler (bad path)
