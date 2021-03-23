@@ -20,7 +20,7 @@ mongoose
 const noteSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: 3,
+    minlength: [3, 'name too small'],
     unique: true,
     required: [true, 'Name required']
   },
@@ -31,7 +31,7 @@ const noteSchema = new mongoose.Schema({
   },
 });
 
-mySchema.plugin(uniqueValidator);
+noteSchema.plugin(uniqueValidator);
 
 noteSchema.set("toJSON", {
   transform: (document, returnedObject) => {

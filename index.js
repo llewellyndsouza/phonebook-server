@@ -78,7 +78,7 @@ app.delete("/api/persons/:id", (request, response, next) => {
 });
 
 // Adds new contact to MongoDB
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   console.log("Add new person");
   const body = request.body;
   console.log(body);
@@ -107,7 +107,7 @@ app.post("/api/persons", (request, response) => {
   person.save().then((newPerson) => {
     console.log("New person added");
     response.json(person);
-  });
+  }).catch(err=>next(err));
 });
 
 //Update contact on MongoDB
