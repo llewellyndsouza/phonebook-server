@@ -16,8 +16,8 @@ POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-    "name": "sample person",
-    "number": "123 456 7896"
+    "name": "sample",
+    "number": "123456789"
 }
 
 ### number missing
