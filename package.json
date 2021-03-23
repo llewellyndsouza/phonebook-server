@@ -7,6 +7,9 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "deploy": "git push heroku master",
+    "heroku:on": "heroku ps:scale web=1",
+    "heroku:off": "heroku ps:scale web=0",
+    "build:ui": "rm -rf build && cd ../phonebook && npm run build && cp -r build ../phonebook-server/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
