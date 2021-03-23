@@ -17,8 +17,16 @@ mongoose
   });
 
 const noteSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minlength: 3,
+    required: [true, 'Name required']
+  },
+  number: {
+    type: String,
+    minlength: [8, 'Phone number should be min 8 characters'],
+    required: [true, 'Phone number required']
+  },
 });
 
 noteSchema.set("toJSON", {
