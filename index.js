@@ -5,6 +5,8 @@ const app = express();
 
 app.use(express.json());
 
+app.use(express.static("build"));
+
 // Request logger (also logs the content when post)
 app.use(
   morgan((tokens, req, res) => {
