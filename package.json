@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "build:ui": "rm -rf build && cd ../phonebook && npm run build && cp -r build ../phonebook-server/",
     "deploy": "git push heroku master",
-    "deploy:full":"npm run build:ui && git add . && git commit -m UIbuildFD && git push && npm run deploy",
+    "deploy:full": "npm run build:ui && git add . && git commit -m UIbuildFD && git push && npm run deploy",
     "heroku:on": "heroku ps:scale web=1",
     "heroku:off": "heroku ps:scale web=0",
     "logs:prod": "heroku logs --tail",
@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "mongoose": "^5.12.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
