@@ -1,5 +1,6 @@
 // MongoDB Init
 const mongoose = require("mongoose");
+var uniqueValidator = require('mongoose-unique-validator'); //Unique validator plugin
 const url = process.env.MONGODB_URI;
 
 mongoose
@@ -20,6 +21,7 @@ const noteSchema = new mongoose.Schema({
   name: {
     type: String,
     minlength: 3,
+    unique: true,
     required: [true, 'Name required']
   },
   number: {
@@ -28,6 +30,8 @@ const noteSchema = new mongoose.Schema({
     required: [true, 'Phone number required']
   },
 });
+
+mySchema.plugin(uniqueValidator);
 
 noteSchema.set("toJSON", {
   transform: (document, returnedObject) => {
