@@ -1,6 +1,6 @@
 // MongoDB Init
 const mongoose = require("mongoose");
-var uniqueValidator = require('mongoose-unique-validator'); //Unique validator plugin
+var uniqueValidator = require("mongoose-unique-validator"); //Unique validator plugin
 const url = process.env.MONGODB_URI;
 
 mongoose
@@ -20,14 +20,14 @@ mongoose
 const noteSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: [3, 'name too small'],
+    minlength: [3, "name too small"],
     unique: true,
-    required: [true, 'Name required']
+    required: [true, "Name required"],
   },
   number: {
     type: String,
-    minlength: [8, 'Phone number should be min 8 characters'],
-    required: [true, 'Phone number required']
+    minlength: [8, "Phone number should be min 8 characters"],
+    required: [true, "Phone number required"],
   },
 });
 

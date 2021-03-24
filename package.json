@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "lint": "eslint .",
     "dev": "nodemon index.js",
     "build:ui": "rm -rf build && cd ../phonebook && npm run build && cp -r build ../phonebook-server/",
     "deploy": "git push heroku master",
@@ -25,6 +26,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^7.22.0",
     "nodemon": "^2.0.7"
   }
 }

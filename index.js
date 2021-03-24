@@ -104,10 +104,13 @@ app.post("/api/persons", (request, response, next) => {
     number: body.number,
   });
 
-  person.save().then((newPerson) => {
-    console.log("New person added");
-    response.json(person);
-  }).catch(err=>next(err));
+  person
+    .save()
+    .then((newPerson) => {
+      console.log("New person added");
+      response.json(person);
+    })
+    .catch((err) => next(err));
 });
 
 //Update contact on MongoDB
